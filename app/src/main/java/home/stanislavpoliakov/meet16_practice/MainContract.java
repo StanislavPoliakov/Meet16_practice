@@ -2,14 +2,22 @@ package home.stanislavpoliakov.meet16_practice;
 
 import android.graphics.Bitmap;
 
-import java.util.List;
-
+/**
+ * Файл интерфейсов (контрактов нашей программы)
+ * Фактически, содержит только интерфейсы MVP. Потому как если в MVVM придется вызывать методы View
+ * из ModelView, то MVVM ничем не будет отличаться от MVP (ну почти ничем). Кстати, интересное наблюдение:
+ * Google рекомендует обновлять View через LiveData, которую мы отслеживаем (Observe) в ViewModel (я реализовал так же,
+ * раз интернет настаивает). Любопытно то, что при такой схеме обновления получается, что View обновляет
+ * себя сама, что как бы умножает Clean Architecture на ноль. Более того, ViewModel запускает асинхронные
+ * задачи, если ей потребовались данные из сети, базы, какой-то логики и так далее! VIEW MODEL, Карл!!!
+ * То есть ViewModel - это чистая модель, View - это и презентор и вью, а Model - это просто аппендикс,
+ * приравненный к низкоуровненвой логике (наверняка, это не так, если правильно собирать интерфейсы,
+ * делать инверсию зависимостей и не делегировать на ViewModel столько логики, но впечатление создается
+ * именно такое). Хотя, надо отметить, что Android.ViewModel и MVVP-ViewModel могут быть разными вещами с
+ * просто совпадающими названиями. Конечно, ViewModel удобна, при восстановлении состояния,  LiveData -
+ * это тоже прикольно, Binding - вообще прелесть, если использовать в разумных пределах
+ */
 public interface MainContract {
-
-    interface MVVMView {
-
-        void updateView(List<DownloadedPicture> bitmapList);
-    }
 
     interface MVPView {
 
@@ -20,13 +28,4 @@ public interface MainContract {
 
         void showData(Bitmap bitmap);
     }
-
-
-    interface MVVMViewModel {
-
-        void setData(List<Bitmap> bitmapCollection);
-
-        void keywordSubmitted(String keyword); // Callback
-    }
-
 }

@@ -3,12 +3,10 @@ package home.stanislavpoliakov.meet16_practice;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
-import android.databinding.BindingMethod;
-import android.databinding.BindingMethods;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.UiThread;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,11 +16,11 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import java.util.List;
-@BindingMethods({
-        @BindingMethod(type = android.widget.ImageView.class,
-                attribute = "app:srcCompat",
-                method = "setImageDrawable") })
-public class UpperFragment extends Fragment implements MainContract.MVVMView, Callback{
+
+/**
+ * Класс отображения View в MVVM
+ */
+public class UpperFragment extends Fragment implements Callback{
     private MyViewModel viewModel;
     private MyAdapter mAdapter;
     private RecyclerView recyclerView;
@@ -35,7 +33,6 @@ public class UpperFragment extends Fragment implements MainContract.MVVMView, Ca
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_upper, container, false);
     }
 
@@ -45,28 +42,33 @@ public class UpperFragment extends Fragment implements MainContract.MVVMView, Ca
         init(view);
     }
 
+    /**
+     * Метод инициализация компонентов
+     * @param view, которая содержит компоненты
+     */
     private void init(View view) {
+
+        // Приявзываем ViewModel
         viewModel = ViewModelProviders.of(this).get(MyViewModel.class);
-        viewModel.attachView(this);
         recyclerView = view.findViewById(R.id.recyclerView);
         searchEdit = view.findViewById(R.id.searchEdit);
 
+        // Обрабатываем окончание ввода (Enter)
         searchEdit.setOnKeyListener(((v, keyCode, event) -> {
             if (keyCode == event.KEYCODE_ENTER) {
                 viewModel.keywordSubmitted(((EditText) v).getText().toString());
 
+                // Отображаем изменения, если данные поменялись
                 Observer<List<DownloadedPicture>> observer = this::updateView;
-                //viewModel.getDataFromModel(((EditText) v).getText().toString()).observe(this, observer);
                 viewModel.bitmapCollection.observe(this, observer);
-                v.clearFocus();
                 return true;
             }
             return false;
         }));
     }
 
-    @Override
-    public void updateView(List<DownloadedPicture> pictureList) {
+    @UiThread
+    private void updateView(List<DownloadedPicture> pictureList) {
         getActivity().runOnUiThread(() -> {
             if (mAdapter == null) initRecyclerView(pictureList);
             else updateRecyclerView(pictureList);

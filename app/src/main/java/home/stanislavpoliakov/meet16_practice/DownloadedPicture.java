@@ -1,42 +1,23 @@
 package home.stanislavpoliakov.meet16_practice;
 
-import android.databinding.BaseObservable;
-import android.databinding.Bindable;
 import android.databinding.BindingMethod;
 import android.databinding.BindingMethods;
 import android.graphics.Bitmap;
 
+/**
+ * Класс данных, которые мы получаем из сети. Содержит описание картинки и саму картинку.
+ * Описание не использую. Вся работа с картинкой.
+ * Использую класс, как структуру данных, хотя знаю, что нужно закрыть переменные в private-поля,
+ * создать для них getter/setter и переопределить Equals и HashCode. Но сейчас 4 утра, и я,
+ * просидев "немало" времени с DataBinding, наконец разобрался как заставить работать app:srcCompat
+ * для ImageView (почему он не находит сеттер для ImageView). Все работает, хочется спать и
+ * браться уже за dagger2
+ */
 @BindingMethods({
         @BindingMethod(type = android.widget.ImageView.class,
                 attribute = "app:srcCompat",
                 method = "setImageBitmap") })
-public class DownloadedPicture extends BaseObservable{
+public class DownloadedPicture {
     public String description;
-
-    @Bindable
     public Bitmap bitmap;
-
-    /*public DownloadedPicture(String description, Bitmap bitmap) {
-        this.description = description;
-        this.bitmap = bitmap;
-        notifyPropertyChanged(BR.downloadedPicture);
-    }*/
-
-    /*@Bindable
-    public Bitmap getBitmap() {
-        return bitmap;
-    }
-
-    public void setBitmap(Bitmap bitmap) {
-        this.bitmap = bitmap;
-        notifyPropertyChanged(BR.bitmap);
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;*/
-
 }

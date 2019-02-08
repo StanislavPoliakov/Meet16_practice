@@ -1,36 +1,28 @@
 package home.stanislavpoliakov.meet16_practice;
 
-import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
-import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.util.Log;
-
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
-public class MyViewModel extends ViewModel implements MainContract.MVVMViewModel{
+/**
+ * Класс ViewModel
+ */
+public class MyViewModel extends ViewModel {
     private static final String TAG = "meet16_logs";
     private Model mModel;
-    private MainContract.MVVMView mView;
-    //List<Bitmap> bitmapCollection;
-    private String keyword;
-    private ExecutorService pool = Executors.newSingleThreadExecutor();
+
+    // Делаем переменную LiveData видимой, чтобы привязать Observer к ней напрямую
     public MutableLiveData<List<DownloadedPicture>> bitmapCollection = new MutableLiveData<>();
-    private FetchDataTask fetchDataTask;
 
     public MyViewModel() {
         mModel = Model.getInstance();
-        mModel.attachViewModel(this);
     }
 
-    public void attachView(MainContract.MVVMView view) {
-        this.mView = view;
-    }
-
+    /**
+     * Для нужд программы (получение данных из сети) запускаем  AsynkTask
+     */
     public class FetchDataTask extends AsyncTask<String, Void, List<DownloadedPicture>> {
 
         @Override
@@ -42,21 +34,22 @@ public class MyViewModel extends ViewModel implements MainContract.MVVMViewModel
         protected void onPostExecute(List<DownloadedPicture> bitmapList) {
             super.onPostExecute(bitmapList);
             bitmapCollection.setValue(bitmapList);
-            Log.d(TAG, "onPostExecute: ");
         }
     }
 
-    @Override
-    public void setData(List<Bitmap> bitmapCollection) {
-
-    }
-
-    @Override
+    /**
+     * Обрабатываем нажатие Enter в EditText
+     * @param keyword пользовательский ввод - часть запроса данных
+     */
     public void keywordSubmitted(String keyword) {
-        fetchDataTask = new FetchDataTask();
+        FetchDataTask fetchDataTask = new FetchDataTask();
         fetchDataTask.execute(keyword);
     }
 
+    /**
+     * Обрабатываем нажатие на ViewHolder
+     * @param itemPosition позиция элемента в списке
+     */
     public void itemClicked(int itemPosition) {
         mModel.setMVPData(itemPosition);
     }

@@ -1,16 +1,9 @@
 package home.stanislavpoliakov.meet16_practice;
 
-import android.content.Context;
-import android.databinding.BindingMethod;
-import android.databinding.BindingMethods;
-import android.databinding.ViewDataBinding;
-import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import java.util.List;
 
@@ -28,7 +21,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        //View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_holder, parent, false);
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         ViewHolderBinding binding = ViewHolderBinding.inflate(inflater, parent, false);
         return new MyViewHolder(binding);
@@ -36,7 +28,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        //holder.holderImage.setImageBitmap(data.get(position));
         holder.bind(data.get(position));
     }
 
@@ -52,13 +43,13 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public ImageView holderImage;
         ViewHolderBinding binding;
 
         public MyViewHolder(ViewHolderBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
 
+            // Вы видите в этом классе itemView? )))
             itemView.setOnClickListener((v) -> {
                 mFragment.holderClicked(getAdapterPosition());
             });
@@ -68,13 +59,5 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             binding.setDownloadedPicture(downloadedPicture);
             binding.executePendingBindings();
         }
-
-
-        /*public MyViewHolder(View itemView) {
-            super(itemView);
-            holderImage = itemView.findViewById(R.id.holderImage);
-
-
-        }*/
     }
 }
