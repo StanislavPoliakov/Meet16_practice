@@ -46,7 +46,7 @@ public class Model {
     private MainContract.MVPPresenter presenter;
     private MainContract.MVVMViewModel viewModel;
     //private String keyword;
-    private BuisnessData buisnessData;
+    //private BuisnessData buisnessData;
     private Map<String, Bitmap> data;
     private List<DownloadedPicture> pictures;
     //private WorkThread workThread;
