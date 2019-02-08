@@ -3,6 +3,8 @@ package home.stanislavpoliakov.meet16_practice;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.databinding.BindingMethod;
+import android.databinding.BindingMethods;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -16,7 +18,10 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import java.util.List;
-
+@BindingMethods({
+        @BindingMethod(type = android.widget.ImageView.class,
+                attribute = "app:srcCompat",
+                method = "setImageDrawable") })
 public class UpperFragment extends Fragment implements MainContract.MVVMView, Callback{
     private MyViewModel viewModel;
     private MyAdapter mAdapter;
@@ -50,7 +55,7 @@ public class UpperFragment extends Fragment implements MainContract.MVVMView, Ca
             if (keyCode == event.KEYCODE_ENTER) {
                 viewModel.keywordSubmitted(((EditText) v).getText().toString());
 
-                Observer<List<Bitmap>> observer = this::updateView;
+                Observer<List<DownloadedPicture>> observer = this::updateView;
                 //viewModel.getDataFromModel(((EditText) v).getText().toString()).observe(this, observer);
                 viewModel.bitmapCollection.observe(this, observer);
                 v.clearFocus();
@@ -61,21 +66,21 @@ public class UpperFragment extends Fragment implements MainContract.MVVMView, Ca
     }
 
     @Override
-    public void updateView(List<Bitmap> bitmapList) {
+    public void updateView(List<DownloadedPicture> pictureList) {
         getActivity().runOnUiThread(() -> {
-            if (mAdapter == null) initRecyclerView(bitmapList);
-            else updateRecyclerView(bitmapList);
+            if (mAdapter == null) initRecyclerView(pictureList);
+            else updateRecyclerView(pictureList);
         });
     }
 
-    private void initRecyclerView(List<Bitmap> data) {
+    private void initRecyclerView(List<DownloadedPicture> data) {
         mAdapter = new MyAdapter(this, data);
         recyclerView.setAdapter(mAdapter);
         GridLayoutManager layoutManager = new GridLayoutManager(this.getContext(), 3);
         recyclerView.setLayoutManager(layoutManager);
     }
 
-    private void updateRecyclerView(List<Bitmap> data) {
+    private void updateRecyclerView(List<DownloadedPicture> data) {
         mAdapter.setData(data);
     }
 

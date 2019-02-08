@@ -19,7 +19,7 @@ public class MyViewModel extends ViewModel implements MainContract.MVVMViewModel
     //List<Bitmap> bitmapCollection;
     private String keyword;
     private ExecutorService pool = Executors.newSingleThreadExecutor();
-    public MutableLiveData<List<Bitmap>> bitmapCollection = new MutableLiveData<>();
+    public MutableLiveData<List<DownloadedPicture>> bitmapCollection = new MutableLiveData<>();
     private FetchDataTask fetchDataTask;
 
     public MyViewModel() {
@@ -31,15 +31,15 @@ public class MyViewModel extends ViewModel implements MainContract.MVVMViewModel
         this.mView = view;
     }
 
-    public class FetchDataTask extends AsyncTask<String, Void, List<Bitmap>> {
+    public class FetchDataTask extends AsyncTask<String, Void, List<DownloadedPicture>> {
 
         @Override
-        protected List<Bitmap> doInBackground(String... strings) {
+        protected List<DownloadedPicture> doInBackground(String... strings) {
             return mModel.fetchData(strings[0]);
         }
 
         @Override
-        protected void onPostExecute(List<Bitmap> bitmapList) {
+        protected void onPostExecute(List<DownloadedPicture> bitmapList) {
             super.onPostExecute(bitmapList);
             bitmapCollection.setValue(bitmapList);
             Log.d(TAG, "onPostExecute: ");

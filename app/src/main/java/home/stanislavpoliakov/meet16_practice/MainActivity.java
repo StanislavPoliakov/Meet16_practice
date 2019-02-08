@@ -1,5 +1,7 @@
 package home.stanislavpoliakov.meet16_practice;
 
+import android.databinding.BindingMethod;
+import android.databinding.BindingMethods;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;

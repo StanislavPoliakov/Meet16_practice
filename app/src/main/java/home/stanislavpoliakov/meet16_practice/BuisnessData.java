@@ -1,10 +1,11 @@
 package home.stanislavpoliakov.meet16_practice;
 
+import android.databinding.BaseObservable;
 import android.graphics.Bitmap;
 
 import java.util.List;
 
-class BuisnessData {
+class BuisnessData extends BaseObservable {
     private List<String> bitmapDescriptions;
     private List<Bitmap> bitmapCollection;
 

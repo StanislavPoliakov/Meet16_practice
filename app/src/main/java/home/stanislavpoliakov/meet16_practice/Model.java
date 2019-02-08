@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import home.stanislavpoliakov.meet16_practice.response_data.ResponseObject;
 
@@ -47,6 +48,7 @@ public class Model {
     //private String keyword;
     private BuisnessData buisnessData;
     private Map<String, Bitmap> data;
+    private List<DownloadedPicture> pictures;
     //private WorkThread workThread;
 
 
@@ -96,8 +98,27 @@ public class Model {
         }
     }*/
 
-    public List<Bitmap> fetchData(String keyword) {
-        buisnessData = new BuisnessData();
+    public List<DownloadedPicture> fetchData(String keyword) {
+        /*return Stream.of(search(keyword).results).parallel()
+                .map(r -> new DownloadedPicture(r.description, getBitmap(r.urls.small)))
+                .collect(Collectors.toList());*/
+
+        pictures = Stream.of(search(keyword).results).parallel()
+                .map(r -> {
+                    DownloadedPicture picture = new DownloadedPicture();
+                    picture.description = r.description;
+                    picture.bitmap = getBitmap(r.urls.small);
+                    return picture;
+                })
+                .collect(Collectors.toList());
+        return pictures;
+
+        /*return pictures.stream()
+                .map(p -> p.getBitmap())
+                .collect(Collectors.toList());*/
+
+
+       /* buisnessData = new BuisnessData();
         List<String> descriptions = Collections.synchronizedList(new ArrayList<>());
         List<Bitmap> bitmapList = Collections.synchronizedList(new ArrayList<>());
 
@@ -109,7 +130,7 @@ public class Model {
         buisnessData.setBitmapDescriptions(descriptions);
         buisnessData.setBitmapCollection(bitmapList);
 
-        return buisnessData.getBitmapCollection();
+        return buisnessData.getBitmapCollection();*/
     }
 
     public void attachPresenter(MainContract.MVPPresenter presenter) {
@@ -128,7 +149,8 @@ public class Model {
     }
 
     private Bitmap getLargeImage(int position) {
-        return buisnessData.getBitmapCollection().get(position);
+        //return buisnessData.getBitmapCollection().get(position);
+        return pictures.get(position).bitmap;
     }
 
    /* public List<Bitmap> getBitmapCollectionByKeyword() {

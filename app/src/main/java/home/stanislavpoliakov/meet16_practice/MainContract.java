@@ -8,7 +8,7 @@ public interface MainContract {
 
     interface MVVMView {
 
-        void updateView(List<Bitmap> bitmapList);
+        void updateView(List<DownloadedPicture> bitmapList);
     }
 
     interface MVPView {
